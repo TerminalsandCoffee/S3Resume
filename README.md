@@ -1,2 +1,8 @@
-# S3Resume
-This repo is for madebyraf.tech - A resume website hosted on AWS
+# Your frontend live here
+
+My own azure resume, following [acg]()
+
+
+## steps
+
+    First Step
