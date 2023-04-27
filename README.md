@@ -1,6 +1,6 @@
 # Your frontend live here
 
-My own azure resume, following [acg]()
+My own AWS resume, following [acg]()
 
 
 ## steps
