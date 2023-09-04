@@ -21,18 +21,6 @@
    <script src="js/modernizr.js"></script>
    <script src="index.js"></script>
 
-   <script>
-      const counter = document.querySelector(".counter-number");
-  
-      async function updateCounter() {
-          let response = await fetch("https://cqt4whz43svt2po7xpt7k3zoni0ortbr.lambda-url.us-east-1.on.aws/");
-          let data = await response.json();
-          counter.innerHTML = `Views: ${data}`;
-      }
-  
-      updateCounter();
-  </script>
-
    <!-- Favicons
 	================================================== -->
 	<link rel="shortcut icon" href="favicon.png" >
@@ -55,6 +43,7 @@
             <li><a class="smoothscroll" href="#about">About</a></li>
 	         <li><a class="smoothscroll" href="#resume">Resume</a></li>
             <li><a class="smoothscroll" href="#views">Views</a></li>
+		 <div class="counter-number"></div>
          </ul> <!-- end #nav -->
 
       </nav> <!-- end #nav-wrap -->
