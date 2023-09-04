@@ -1,9 +1,21 @@
-const counter = document.querySelector(".counter-number");
+window.addEventListener('DOMContentLoaded', (event) => {
+getVisitCount();
+})
 
-async function updateCounter() {
-    let response = await fetch("https://cqt4whz43svt2po7xpt7k3zoni0ortbr.lambda-url.us-east-1.amazonaws.com/");
-    let data = await response.json();
-    counter.innerHTML = `Views: ${data.views}`;
+const functionAPI = '';
+
+const getVisitCount = () => {
+    let count = 30;
+    fetch(functionAPI).then(response => {
+        return response.json()
+
+    }).then(response =>{
+        console.log("Website called function API.")
+        count = response.count;
+        document.getElementById("counter").innerText = count;
+    }).catch(function(error){
+        console.log(error)
+    });
+    return count;
 }
 
-updateCounter();
