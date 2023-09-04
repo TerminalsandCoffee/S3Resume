@@ -19,7 +19,19 @@
    <!-- Script
    ================================================== -->
    <script src="js/modernizr.js"></script>
-   <script src="main.js"></script>
+   <script src="index.js"></script>
+
+   <script>
+      const counter = document.querySelector(".counter-number");
+  
+      async function updateCounter() {
+          let response = await fetch("https://cqt4whz43svt2po7xpt7k3zoni0ortbr.lambda-url.us-east-1.amazonaws.com/");
+          let data = await response.json();
+          counter.innerHTML = `Views: ${data.views}`;
+      }
+  
+      updateCounter();
+  </script>
 
    <!-- Favicons
 	================================================== -->
@@ -42,7 +54,8 @@
             <li class="current"><a class="smoothscroll" href="#home">Home</a></li>
             <li><a class="smoothscroll" href="#about">About</a></li>
 	         <li><a class="smoothscroll" href="#resume">Resume</a></li>
-         </ul> <!-- end #nav --> 
+            <li><a class="smoothscroll" href="#resume">Resume</a></li>
+         </ul> <!-- end #nav -->
 
       </nav> <!-- end #nav-wrap -->
 
@@ -50,7 +63,7 @@
          <div class="banner-text">
             <h1 class="responsive-headline">Hi, I'm Rafael</h1>
             
-             <p>and this page has been viewed <span id="counter" class="counter-number"></span> times</p> 
+            <p>and this page has been viewed <span id="counter" class="counter-number"></span> times</p> 
             <ul class="social">
                <li><a href="https://www.linkedin.com/in/rgmartinez-cloud/"><i class="fa fa-linkedin"></i></a></li>
                <li><a href="https://medium.com/@terminalsandcoffee"><i class="fa fa-instagram"></i></a></li>
@@ -291,7 +304,6 @@
    <script src="js/jquery.fittext.js"></script>
    <script src="js/magnific-popup.js"></script>
    <script src="js/init.js"></script>
-   <script src="index.js"></script>
 
 </body>
 
