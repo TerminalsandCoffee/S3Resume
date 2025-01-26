@@ -37,4 +37,4 @@ Welcome to my personal portfolio website repository! This site showcases my jour
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
-Built with ☕ and 💻 by Rafael Martinez
+Built with 💻 and ☕ by Rafael Martinez
