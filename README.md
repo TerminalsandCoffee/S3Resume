@@ -20,7 +20,7 @@ Welcome to my personal portfolio website repository! This site showcases my jour
 
 ## 📝 Project Structure
 
-1. git clone https://github.com/YourUsername/portfolio.git
+1. git clone (https://github.com/TerminalsandCoffee/S3Resume.git)
 
 2. Open `index.html` in your browser to view locally
 
