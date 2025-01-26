@@ -1,9 +1,16 @@
-const counter = document.querySelector(".counter-number");
-
-async function updateCounter() {
-    let response = await fetch("https://cqt4whz43svt2po7xpt7k3zoni0ortbr.lambda-url.us-east-1.on.aws/");
-    let data = await response.json();
-    counter.innerHTML = `Views: ${data}`;
-}
-
-updateCounter();
+document.addEventListener('DOMContentLoaded', function() {
+    // Replace this URL with your actual API endpoint that tracks views
+    fetch('https://api.countapi.xyz/hit/your-site-name/visits')
+    .then(response => response.json())
+    .then(data => {
+        document.querySelectorAll('.counter-number').forEach(element => {
+            element.textContent = data.value;
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching view count:', error);
+        document.querySelectorAll('.counter-number').forEach(element => {
+            element.textContent = 'Error loading count';
+        });
+    });
+});
