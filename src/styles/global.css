@@ -160,8 +160,9 @@ a {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
+  margin-left: clamp(1rem, 10vw, 12rem);
 }
 
 .eyebrow {
@@ -182,6 +183,7 @@ a {
   color: var(--text-secondary);
   max-width: 50ch;
   line-height: 1.7;
+  text-align: left;
 }
 
 .hero-actions {
@@ -189,7 +191,7 @@ a {
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 0.5rem;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .primary,
@@ -449,7 +451,7 @@ a {
 }
 
 .counter-value {
-  font-size: clamp(1.4rem, 3.5vw, 2.1rem);
+  font-size: clamp(1.25rem, 3vw, 1.8rem);
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-primary);
@@ -633,6 +635,20 @@ a {
 
   .hero {
     padding-top: 8rem;
+  }
+
+  .hero-content {
+    margin-left: 0;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .lede {
+    text-align: center;
   }
 }
 
