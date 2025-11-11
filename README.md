@@ -1,40 +1,64 @@
 # Rafael's Cloud Portfolio 🚀
 
-Welcome to my personal portfolio website repository! This site showcases my journey and expertise in cloud security engineering and automation.
+Modernized resume website built with **React**, **TypeScript**, and **Vite**, deployed to Amazon S3 + CloudFront. The site highlights my cloud security experience, certifications, and current projects while keeping the visitor counter from the previous static implementation.
 
 ## 🌟 Features
 
-- Responsive design for all devices
-- Real-time visitor counter
-- Professional social media integration
-- Cloud security project showcase
-- Skills and certification display
+- Responsive layout with modern dark theme
+- Real-time visitor counter powered by CountAPI
+- Smooth in-page navigation with mobile-friendly menu
+- Sections for hero, bio, certifications, experience, and contact
+- Built for static hosting on S3 with optimized production bundle
 
-## 🛠️ Technologies Used
+## 🧱 Tech Stack
 
-- HTML5
-- CSS3
-- JavaScript
-- Font Awesome Icons
-- AWS Infrastructure (for hosting)
+- React 18 + TypeScript
+- Vite 7 build tooling
+- CSS modules (single global stylesheet)
+- React Icons
+- AWS S3 / CloudFront for hosting & CDN
 
-## 📝 Project Structure
+## ⚙️ Local Development
 
-1. git clone (https://github.com/TerminalsandCoffee/S3Resume.git)
+```bash
+npm install
+npm run dev
+```
 
-2. Open `index.html` in your browser to view locally
+The development server opens automatically. The app lives at `http://localhost:5173`.
 
-3. Make any desired modifications to personalize the content
+## 📦 Production Build
+
+```bash
+npm run build
+```
+
+Outputs a static bundle in the `dist/` directory ready for S3.
+
+## ☁️ Deploy to S3
+
+1. Build the site: `npm run build`
+2. Sync the `dist/` folder to your S3 bucket:
+
+```bash
+aws s3 sync dist/ s3://<your-bucket-name> --delete
+```
+
+3. If you use CloudFront, create an invalidation so changes propagate:
+
+```bash
+aws cloudfront create-invalidation --distribution-id <distribution-id> --paths "/*"
+```
+
+## 📂 Legacy Assets
+
+The former static HTML/CSS version is preserved in `legacy-site/` for reference.
 
 ## 📫 Connect With Me
 
 - LinkedIn: [rgmartinez-cloud](https://www.linkedin.com/in/rgmartinez-cloud/)
 - Blog: [Medium](https://medium.com/@terminalsandcoffee)
 - GitHub: [TerminalsandCoffee](https://github.com/TerminalsandCoffee)
-
-## 📜 License
-
-This project is open source and available under the [MIT License](LICENSE).
 
 ---
 Built with 💻 and ☕ by Rafael Martinez
