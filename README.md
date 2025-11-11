@@ -35,6 +35,33 @@ npm run build
 
 Outputs a static bundle in the `dist/` directory ready for S3.
 
+## 🔁 Continuous Deployment (CodePipeline / CodeBuild)
+
+Committed a `buildspec.yml` that automates the deploy:
+
+```yaml
+version: 0.2
+env:
+  variables:
+    S3_BUCKET: madebyraf.tech-resumewebsite
+    CLOUDFRONT_DISTRIBUTION_ID: E2TSQIE9BDWTRX
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - npm ci
+  build:
+    commands:
+      - npm run build
+  post_build:
+    commands:
+      - aws s3 sync dist/ "s3://$S3_BUCKET" --delete
+      - aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" --paths "/*"
+```
+
+Hook this repo to CodePipeline and every commit will build, sync to S3, and invalidate CloudFront automatically.
+
 ## ☁️ Deploy to S3
 
 1. Build the site: `npm run build`
