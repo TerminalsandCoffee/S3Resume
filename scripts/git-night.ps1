@@ -1,20 +1,18 @@
 param(
-  [Parameter(Mandatory = $true)]
-  [string]$Message,
-
-  [string]$Prefix = "feat",
-
+  [string]$Message = "WIP: late-night changes",
   [switch]$Force
 )
 
-$MainBranch = "main"
-$Remote = "origin"
-$GitHubUser = "TerminalsandCoffee" # update if you ever rename your GitHub user
-$Repo = (git rev-parse --show-toplevel | Split-Path -Leaf)
+# ───── CONFIG ─────
+$ProtectedBranches = @("main", "master", "develop") # add more if needed
+$Remote            = "origin"
+$GitHubUser        = "TerminalsandCoffee"          # ← change if different
+$MainBranch        = $ProtectedBranches[0]         # default PR target
 
-$FG = "DarkCyan"
-$ERR = "Red"
-$OK = "Green"
+$FG   = "DarkCyan"
+$ERR  = "Red"
+$OK   = "Green"
+$WARN = "Yellow"
 
 function Write-Status {
   param(
@@ -25,43 +23,59 @@ function Write-Status {
   Write-Host $Msg -ForegroundColor $Color
 }
 
-# 1. Warn on dirty working tree (unless -Force), but do not block
-$status = git status --porcelain
-if ($status -and -not $Force) {
-  Write-Status "Uncommitted changes detected. Proceeding and committing them on the new branch." $ERR
+# ───── 1. CURRENT STATE ─────
+$curBranch = (git rev-parse --abbrev-ref HEAD).Trim()
+$dirty     = git status --porcelain
+
+if (-not $dirty -and -not $Force) {
+  Write-Status "Nothing to commit – exiting." $WARN
+  exit 0
 }
 
-# 2. Update local main
-git checkout $MainBranch 2>$null
-git pull $Remote $MainBranch
+# ───── 2. ENSURE WORK HAPPENS ON FEATURE BRANCH ─────
+if ($ProtectedBranches -contains $curBranch) {
+  Write-Status "`nYou are on '$curBranch' – creating a feature branch so we don't commit to a protected branch." $WARN
 
-# 3. Create feature branch: <prefix>/yyyyMMdd-hhmm-<sanitized-message>
-$timestamp = Get-Date -Format "yyyyMMdd-HHmm"
-$sanitized = $Message -replace '[^\w-]+', '-' -replace '-+$', ''
-$branch = "$Prefix/$timestamp-$($sanitized.ToLower())"
+  # If clean, refresh from remote before branching
+  if (-not $dirty) {
+    Write-Status "Working tree clean. Pulling latest from '$Remote/$curBranch'..." $FG
+    git pull $Remote $curBranch
+  }
 
-git checkout -b $branch
+  # Create feature branch: feat/yyyyMMdd-HHmm-<sanitized-message>
+  $ts        = Get-Date -Format "yyyyMMdd-HHmm"
+  $sanitized = $Message -replace '[^\w-]+', '-' -replace '-+$', ''
+  $newBranch = "feat/$ts-$($sanitized.ToLower())"
 
-# 4. Stage and commit if there are changes
+  git checkout -b $newBranch
+  Write-Status "Switched to new branch: $newBranch" $OK
+}
+else {
+  $newBranch = $curBranch
+  Write-Status "Using existing branch '$newBranch'." $FG
+}
+
+# ───── 3. STAGE & COMMIT ─────
 git add .
 
 if (git diff --cached --quiet) {
-  Write-Status "No staged changes to commit on $branch. Aborting." $ERR
-  exit 1
+  Write-Status "No staged changes to commit on '$newBranch'. Aborting." $WARN
+  exit 0
 }
 
 git commit -m "$Message"
 
-# 5. Push & set upstream
-git push -u $Remote $branch
+# ───── 4. PUSH & SET UPSTREAM ─────
+git push -u $Remote $newBranch
 
-# 6. Open GitHub PR in browser
-$prUrl = "https://github.com/$GitHubUser/$Repo/compare/$MainBranch...$branch?expand=1"
+# ───── 5. OPEN GITHUB PR (compare view) ─────
+$Repo  = (git rev-parse --show-toplevel | Split-Path -Leaf)
+$prUrl = "https://github.com/$GitHubUser/$Repo/compare/$MainBranch...$newBranch?expand=1"
 Start-Process $prUrl
 
-Write-Status "`nBranch: $branch" $OK
-Write-Status "PR opened: $prUrl`n" $OK
-Write-Status "Night mode activated." "DarkGray"
+Write-Status "`nBranch : $newBranch" $OK
+Write-Status "PR     : $prUrl`n" $OK
+Write-Status "Night-mode complete – go dark. ☾" "DarkGray"
 
 <#
 USAGE
@@ -72,21 +86,22 @@ From the repository root in PowerShell:
   pwsh ./scripts/git-night.ps1 -Message "Short, descriptive commit message"
 
 Optional parameters:
-  -Prefix feat|chore|fix   # defaults to 'feat'
-  -Force                   # ignore uncommitted changes check (not recommended)
+  -Force   # ignore 'nothing to commit' guard
 
 What this script does:
-  1. Verifies you have a clean working tree (unless -Force is supplied).
-  2. Checks out and pulls the latest 'main' from 'origin'.
-  3. Creates a feature branch named:
-       <prefix>/yyyyMMdd-HHmm-<sanitized-message>
-  4. Stages all changes and commits them with the provided -Message.
-  5. Pushes the branch to origin and sets the upstream.
-  6. Opens a GitHub compare view (PR) in your default browser.
+  1. Checks if there are changes to commit; exits early if clean (unless -Force).
+  2. If you are on a protected branch (main/master/develop):
+       - Optionally pulls latest from remote when clean.
+       - Creates a feature branch:
+           feat/yyyyMMdd-HHmm-<sanitized-message>
+       - Carries your current work onto that branch.
+     If you are already on a non-protected branch:
+       - Uses the current branch as-is.
+  3. Stages all changes and commits them with the provided -Message.
+  4. Pushes the branch to origin (setting/updating upstream).
+  5. Opens a GitHub compare (PR) view from MainBranch → feature branch.
 
-This is intended for solo/portfolio work to enforce a clean
-feature-branch → PR → main workflow instead of committing directly to main.
+Goal: enforce "never commit directly to main" and always work via
+feature-branch → PR → protected branch.
 #>
-
-
 
