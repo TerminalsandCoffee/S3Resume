@@ -33,10 +33,10 @@ const socialLinks = [
 ]
 
 const certifications: Certification[] = [
-  { title: 'AWS Certified Security – Specialty SCS-C02', date: 'April 2024' },
-  { title: 'AWS Certified SysOps Administrator', date: 'March 2024' },
   { title: 'HashiCorp Certified: Terraform Associate (003)', date: 'November 2025' },
   { title: 'KCNA: Kubernetes and Cloud Native Associate', date: 'October 2025' },
+  { title: 'AWS Certified Security – Specialty SCS-C02', date: 'April 2024' },
+  { title: 'AWS Certified SysOps Administrator', date: 'March 2024' },
   { title: 'Linux Essentials', date: 'January 2023' },
   { title: 'CompTIA IT Operations Specialist', date: 'September 2022' },
   { title: 'AWS Certified Cloud Practitioner', date: 'May 2022' },
@@ -133,9 +133,8 @@ function App() {
           <p className="eyebrow">Howdy, I&apos;m Rafael 🤠👋</p>
           <h1>Cloud DevOps automation for regulated environments.</h1>
           <p className="lede">
-            Cloud DevOps Engineer focused on codifying infrastructure with Terraform and Kubernetes.
-            I help teams ship reliable, secure platforms that balance automation, performance, and
-            cost.
+            I design scalable AWS platforms with Terraform, containers, and GitOps workflows that
+            remove manual ops, tighten security, and accelerate feature delivery.
           </p>
           <div className="hero-actions">
             <a className="primary" href="#contact">
