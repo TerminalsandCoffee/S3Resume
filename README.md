@@ -65,9 +65,9 @@ npm run build
 
 Outputs a static bundle in the `dist/` directory ready for S3.
 
-## Continuous Deployment (CodePipeline / CodeBuild)
+## Continuous Deployment (GitHub Actions)
 
-`buildspec.yml` describes the CI/CD behavior for CodeBuild:
+`buildspec.yml` describes the CI/CD behavior for GHA:
 
 ```yaml
 version: 0.2
@@ -95,7 +95,40 @@ phases:
       - aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" --paths "/*"
 ```
 
-Connected to CodePipeline, every commit produces a new static build, updates S3, and invalidates CloudFront.
+Wired to GHA, every commit produces a new static build, updates S3, and invalidates CloudFront.
+
+                   ┌─────────────────────────┐
+                   │      GitHub Repo        │
+                   │    (Source Control)     │
+                   └─────────────┬───────────┘
+                                 │ Push event
+                                 ▼
+                   ┌─────────────────────────┐
+                   │     GitHub Actions      │
+                   │  Build → Deploy → Scan  │
+                   │  - npm build (if needed)│
+                   │  - Sync to S3           │
+                   │  - CloudFront Invalidate│
+                   └─────────────┬───────────┘
+                                 │ Deployed content
+                                 ▼
+                   ┌─────────────────────────┐
+                   │        S3 Bucket        │
+                   │   Static Website Host   │
+                   └─────────────┬───────────┘
+                                 │ S3 Origin
+                                 ▼
+                   ┌─────────────────────────┐
+                   │  CloudFront Distribution │
+                   │   Global CDN + Caching  │
+                   └─────────────┬───────────┘
+                                 │
+                                 ▼
+                   ┌─────────────────────────┐
+                   │      Route 53 Alias     │
+                   │   example.com → CF      │
+                   └─────────────────────────┘
+
 
 ## Deploy to S3
 
@@ -135,4 +168,5 @@ If you enjoy my projects or want to support my work, you can buy me a coffee:
 ---
 
 Built with 💻 and ☕ by Rafael Martinez
+
 
